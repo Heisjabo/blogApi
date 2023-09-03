@@ -1,10 +1,10 @@
-import Blog from "../models/blogsModel";
-import { uploadFile } from "../helpers/upload";
+import Blog from "../models/blogsModel.js";
+import { uploadFile } from "../helpers/upload.js";
 
 
 // create blog
 
-const createBlog = async (req, res) => {
+export const createBlog = async (req, res) => {
     try{
         const result = await uploadFile(req.file, res);
         const newBlog = await Blog.create({
