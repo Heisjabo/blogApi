@@ -15,6 +15,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1", userRoute);
 app.use("/api/v1", blogRoute);
 
-app.listen(port, () => console.log(`server started on port ${port}`));
+app.listen(port, console.log(`server started on port ${port}`));
 
 
