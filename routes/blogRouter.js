@@ -6,12 +6,13 @@ import {
     deleteBlog,
     getBlogById
 } from "../controllers/blogController.js";
+import upload from "../helpers/multer.js";
 
 const router = express.Router();
 
 // create blog
 
-router.post("/blogs", createBlog);
+router.post("/blogs", upload.single("image"), createBlog);
 
 // get all blogs
 
@@ -23,10 +24,10 @@ router.get("/blogs/:id", getBlogById);
 
 // update blog
 
-router.put("/blogs/:id", updateBlog);
+router.put("/blogs/:id",upload.single("image"), updateBlog);
 
 // delete blog
 
-router.delete("blogs/:id", deleteBlog);
+router.delete("/blogs/:id", deleteBlog);
 
 export default router;

@@ -17,7 +17,7 @@ export const createBlog = async (req, res) => {
           status: "success",
           message: "Blog was created successfully",
           content: {
-            newPost,
+            newBlog,
           },
         });
     } catch(error){
