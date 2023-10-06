@@ -50,19 +50,22 @@ export const getAllBlogs = async (req, res) => {
 
 export const updateBlog = async (req, res) => {
   try {
+    console.log("entering updateBlog");
     const result = await uploadFile(req.file, res);
-    const blog = await Blog.findById(req.params.id);
+    const blog = await Blog.findByIdAndUpdate(req.params.id, {
+      title: req.body.title,
+      description: req.body.description,
+      image: result.secure_url,
+    });
+
     if (!blog) {
       return res.status(400).json({
         status: "failed",
         message: "blog not found",
       });
     }
-    await BlogModel.findByIdAndUpdate(req.params.id, {
-      title: req.body.title,
-      description: req.body.description,
-      image: result.secure_url,
-    });
+
+    console.log("exiting update blog");
 
     return res.status(200).json({
       status: "success",
@@ -75,6 +78,7 @@ export const updateBlog = async (req, res) => {
     });
   }
 };
+
 
 // delete blog
 
