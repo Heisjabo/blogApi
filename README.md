@@ -14,6 +14,8 @@
 
 5. Delete user: https://blogapi-se2j.onrender.com/api/v1/users/:id
 
+6. Verify user: https://blogapi-se2j.onrender.com/api/v1/verify/:id/:token
+
 # Blogs
 
 1. Create a Blog: https://blogapi-se2j.onrender.com/api/v1/blogs

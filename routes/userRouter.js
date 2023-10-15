@@ -26,7 +26,7 @@ router.get("/users/verify", getUserVerifications);
 
 //verify users
 
-router.put("/users/verify/:id/:token", verifyUser);
+router.put("/verify/:id/:token", verifyUser);
 
 
 // get user by id

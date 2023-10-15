@@ -95,11 +95,11 @@ export const createUser = async (req, res) => {
             <h1>Email Verification</h1>
         </div>
         <div class="content">
-            <h2>Dear ${newUser.name}</h2>
+            <h2>Dear ${newUser.username}</h2>
             <p>Thanks for signing up with us!</p>
             <p>Click the following link to verify your email address:</p>
             <div class="button">
-                <a href="${`http://localhost:8080/api/v1/users/verify/${user_id}/${token}`}">Verify Email</a>
+                <a href="${`${req.hostname}/api/v1/users/verify/${user_id}/${token}`}">Verify Email</a>
             </div>
         </div>
         <div class="footer">
@@ -120,7 +120,7 @@ export const createUser = async (req, res) => {
         return res.status(200).json({
             status: "success",
             message: "Please verify your email address to continue to your account",
-            verification_link: `${req.params.host}/verify/${user_id}/${token}`,
+            verification_link: `${req.hostname}/api/v1/verify/${user_id}/${token}`,
             user: newUser
         })
     } catch (error){
