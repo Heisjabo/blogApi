@@ -5,8 +5,9 @@ import {
   getUsers,
   getUserById,
   updateUser,
-  deleteUser
+  deleteUser,
 } from "../controllers/userController.js";
+import { getUserVerifications, verifyUser } from "../controllers/verificationController.js";
 
 const router = express.Router();
 
@@ -19,6 +20,15 @@ router.post('/users/login', authUser);
 
 router.get("/users", getUsers);
 
+// get verifications
+
+router.get("/users/verify", getUserVerifications);
+
+//verify users
+
+router.put("/users/verify/:id/:token", verifyUser);
+
+
 // get user by id
 
 router.get("/users/:id", getUserById);
@@ -30,5 +40,9 @@ router.put("/users/:id", updateUser);
 // delete user
 
 router.delete("/users/:id", deleteUser);
+
+
+
+
 
 export default router;

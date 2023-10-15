@@ -50,31 +50,41 @@ export const getAllBlogs = async (req, res) => {
 
 export const updateBlog = async (req, res) => {
   try {
-    console.log("entering updateBlog");
-    const result = await uploadFile(req.file, res);
-    const blog = await Blog.findByIdAndUpdate(req.params.id, {
-      title: req.body.title,
-      description: req.body.description,
-      image: result.secure_url,
-    });
+    console.log("Entering updateBlog");
+    const id = req.params.id;
+    console.log("ID:", id);
 
-    if (!blog) {
-      return res.status(400).json({
-        status: "failed",
-        message: "blog not found",
+    // Check if an image file is uploaded
+    if (req.file) {
+      const result = await uploadFile(req.file, res);
+      console.log("Result:", result.secure_url);
+
+      const blog = await Blog.findByIdAndUpdate(id, {
+        title: req.body.title,
+        description: req.body.description,
+        image: result.secure_url,
       });
+      console.log("Blog:", blog);
+    } else {
+      // No image file in the request, update title and description if provided
+      const updateFields = {
+        title: req.body.title,
+        description: req.body.description,
+      };
+      const blog = await Blog.findByIdAndUpdate(id, updateFields);
+      console.log("Blog:", blog);
     }
-
-    console.log("exiting update blog");
 
     return res.status(200).json({
       status: "success",
-      message: "blog updated successfully",
+      message: "Blog updated successfully",
     });
+    
   } catch (error) {
+    console.log("Error:", error);
     return res.status(400).json({
       status: "failed",
-      message: error.message,
+      error: error.message,
     });
   }
 };

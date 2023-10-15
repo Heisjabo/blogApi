@@ -2,13 +2,12 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
-import upload from "./helpers/multer.js";
+// import upload from "./helpers/multer.js";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 import userRoute from "./routes/userRouter.js";
 import blogRoute from "./routes/blogRouter.js";
-
 import swaggerUi from "swagger-ui-express";
 import  swaggerJsDoc from "swagger-jsdoc";
 
@@ -17,15 +16,21 @@ const options = {
         openapi: "3.0.0",
         info: {
             title: "Blog API",
-            version: "1.0.0"
+            version: "1.0.0",
+            contact: {
+                name: "Jabo",
+                email: "jabojeanmarie5@gmail.com",
+                url: "uxjabo.netlify.app",
+              },
         },
+       
         servers: [
             {
-                url: "https://blogapi-se2j.onrender.com"
+                url: ["http://localhost:5000" , "https://blogapi-se2j.onrender.com"]
             }
         ]
     },
-    apis: ["./routes/*.js", "./modules/*.js"],
+    apis: ["./routes/*.js"],
 }
 
 const specs = swaggerJsDoc(options);
@@ -36,14 +41,18 @@ connectDB();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(cors());
 app.use(morgan("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
-// app.use(upload.single("image"));
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api/v1", userRoute);
 app.use("/api/v1", blogRoute);
+
+app.get("/", (req, res) => {
+    return res.status(200).json({
+      status: "success",
+      message: "Welcome to my API",
+    });
+  });
+
 
 app.use("*", (req, res) => {
     return res.status(404).json({
