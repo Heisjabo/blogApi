@@ -51,7 +51,7 @@ app.get("/", (req, res) => {
       status: "success",
       message: "Welcome to my API",
     });
-  });
+});
 
 
 app.use("*", (req, res) => {
@@ -59,7 +59,7 @@ app.use("*", (req, res) => {
       status: "failed",
       message: "Invalid URL",
     });
-  });
+});
 
 app.listen(port, console.log(`server started on port ${port}`));
 
