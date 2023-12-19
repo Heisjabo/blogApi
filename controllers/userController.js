@@ -8,8 +8,6 @@ dotenv.config();
 
 // creating a user
 
-const mail_from = process.env.MAIL_USERNAME;
-
 export const createUser = async (req, res) => {
   console.log(req.body);
   try {
@@ -110,7 +108,7 @@ export const createUser = async (req, res) => {
 </html>
 `;
 
-    sendEmail(mail_from, newUser.email, "Email Verification", html);
+    sendEmail('"Blog App" <jaboinnovates@gmail.com>', newUser.email, `Email Verification`, html);
 
     return res.status(200).json({
       status: "success",
