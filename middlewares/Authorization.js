@@ -14,7 +14,7 @@ export const Authorization = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({
         status: "failed",
-        message: "You are not logged in please login to add a comment",
+        message: "You are not logged in please login to continue.",
       });
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -32,7 +32,7 @@ export const Authorization = async (req, res, next) => {
       status: "failed",
       error:
         error.message +
-        "token has expired please login again",
+        " token has expired please login again",
     });
   }
 };
