@@ -23,12 +23,7 @@ const options = {
        
         servers: [
             {
-                url: "http://localhost:5000",
-                description: "local server"
-            },
-            {
                 url: "https://blogapi-se2j.onrender.com",
-                description: 'production server'
             }
         ]
     },
@@ -54,12 +49,6 @@ app.get("/", (req, res) => {
       message: "Welcome to my API",
     });
 });
-
-const person = {
-    name: "John",
-    age: 16,
-    address: "123 Main St"
-}
 
 app.use("*", (req, res) => {
     return res.status(404).json({
