@@ -15,23 +15,25 @@ const options = {
     definition: {
         openapi: "3.0.0",
         info: {
-            title: "Blog API",
+            title: "Blog API doc",
             version: "1.0.0",
-            contact: {
-                name: "Jabo",
-                email: "jabojeanmarie5@gmail.com",
-                url: "uxjabo.netlify.app",
-              },
+            description: 
+                "This is a simple blog API made with express and mongodb.",
         },
        
         servers: [
             {
-                url: ["http://localhost:5000" , "https://blogapi-se2j.onrender.com"]
+                url: "http://localhost:5000",
+                description: "local server"
+            },
+            {
+                url: "https://blogapi-se2j.onrender.com",
+                description: 'production server'
             }
         ]
     },
     apis: ["./routes/*.js"],
-}
+};
 
 const specs = swaggerJsDoc(options);
 
@@ -53,6 +55,11 @@ app.get("/", (req, res) => {
     });
 });
 
+const person = {
+    name: "John",
+    age: 16,
+    address: "123 Main St"
+}
 
 app.use("*", (req, res) => {
     return res.status(404).json({
@@ -61,6 +68,8 @@ app.use("*", (req, res) => {
     });
 });
 
-app.listen(port, console.log(`server started on port ${port}`));
+app.listen(port, () => {
+    console.log(`server started on port ${port}`)
+});
 
 

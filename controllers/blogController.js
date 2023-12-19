@@ -1,5 +1,6 @@
 import Blog from "../models/blogsModel.js";
 import { uploadFile } from "../helpers/upload.js";
+import { Comment } from "../models/blogsModel.js";
 
 
 // create blog
@@ -137,3 +138,27 @@ export const getBlogById = async (req, res) => {
         })
     }
 }
+
+// comments
+
+export const addComment = async (req, res) => {
+  const { blogId } = req.params;
+  const { text, user } = req.body;
+
+  try {
+      const blog = await Blog.findById(blogId);
+
+      if (!blog) {
+          return res.status(404).json({ message: "Blog not found" });
+      }
+
+      const newComment = { text, user };
+      blog.comments.push(newComment);
+      
+      await blog.save();
+
+      res.status(201).json({ message: "Comment added successfully", comment: newComment });
+  } catch (error) {
+      res.status(500).json({ message: "Error adding comment", error: error.message });
+  }
+};

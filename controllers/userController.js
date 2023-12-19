@@ -1,47 +1,47 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import UserVerification from "../models/userVerification.js";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import sendEmail from "../helpers/sendEmail.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-// creating a user 
+// creating a user
 
 const mail_from = process.env.MAIL_USERNAME;
 
 export const createUser = async (req, res) => {
-    console.log(req.body);
-    try{
-        const user = await User.findOne({email: req.body.email});
-        if(user){
-            return res.status(409).json({
-                status: "failed",
-                message: "Email has already been registered"
-            });
-        }
+  console.log(req.body);
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      return res.status(409).json({
+        status: "failed",
+        message: "Email has already been registered",
+      });
+    }
 
-        let newUser = await User.create({
-            username: req.body.username,
-            email: req.body.email,
-            phone: req.body.phone,
-            password: req.body.password
-        });
+    let newUser = await User.create({
+      username: req.body.username,
+      email: req.body.email,
+      phone: req.body.phone,
+      password: req.body.password,
+    });
 
-        const token = uuidv4();
-        const expiresIn = new Date();
-        expiresIn.setHours(expiresIn.getHours() + 6);
-        const user_id = newUser._id;
+    const token = uuidv4();
+    const expiresIn = new Date();
+    expiresIn.setHours(expiresIn.getHours() + 6);
+    const user_id = newUser._id;
 
-        let verification = await UserVerification.create({
-            token: token,
-            userId: newUser._id,
-            expiresIn: expiresIn
-        });
+    let verification = await UserVerification.create({
+      token: token,
+      userId: newUser._id,
+      expiresIn: expiresIn,
+    });
 
-        await verification.save();
+    await verification.save();
 
-        const html = `<!DOCTYPE html>
+    const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -110,93 +110,88 @@ export const createUser = async (req, res) => {
 </html>
 `;
 
-        sendEmail(
-            mail_from,
-             newUser.email,
-            "Email Verification",
-            html
-        );
+    sendEmail(mail_from, newUser.email, "Email Verification", html);
 
-        return res.status(200).json({
-            status: "success",
-            message: "Please verify your email address to continue to your account",
-            verification_link: `${req.hostname}/api/v1/verify/${user_id}/${token}`,
-            user: newUser
-        })
-    } catch (error){
-        res.status(400).json({message: error.message});
-    }
+    return res.status(200).json({
+      status: "success",
+      message: "Please verify your email address to continue to your account",
+      verification_link: `${req.hostname}/api/v1/verify/${user_id}/${token}`,
+      user: newUser,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
 // user authorisation
 
 export const authUser = async (req, res, next) => {
-    try {
-        const user = await User.findOne({email: req.body.email});
-        if(!user){
-            return res.status(401).json({
-                status: "failed",
-                message: "user not found"
-            });
-        }
-        if(user.password !== req.body.password){
-            return res.status(401).json({
-                status: "failed",
-                message: "incorrect password"
-            });
-        }
-
-        return res.status(200).json({
-          token: await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "1d",
-          }),
-          status: "success",
-          user,
-        });
-
-
-    } catch(error){
-        res.status(error.status).json({error: error.message});
-        console.log(error);
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(401).json({
+        status: "failed",
+        message: "user not found",
+      });
     }
-}
+    if (user.password !== req.body.password) {
+      return res.status(401).json({
+        status: "failed",
+        message: "incorrect password",
+      });
+    }
+
+    return res.status(200).json({
+      token: await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      }),
+      status: "success",
+      user,
+    });
+  } catch (error) {
+    res.status(error.status).json({ error: error.message });
+    console.log(error);
+  }
+};
 
 // get all users
 
 export const getUsers = async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json(users);
-    } catch(error){
-        res.status(500).json({message: error.message});
-    }
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // get user a specific user
 
 export const getUserById = async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id);
-        if(!user) throw Error("User not found");
-        res.json(user);
-    } catch(error){
-        res.status(404).json({message: error.message});
-    }
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) throw Error("User not found");
+    res.json(user);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
 // update user
 
 export const updateUser = async (req, res) => {
-    try{
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true});
-        if(!user) throw Error("User not found");
-        res.json({
-            status: "success: user updated successfully",
-            user
-        });
-    } catch(error){
-        res.status(400).json({message: error.message});
-    }
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!user) throw Error("User not found");
+    res.json({
+      status: "success: user updated successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
 // delete user

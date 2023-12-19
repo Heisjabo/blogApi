@@ -4,101 +4,147 @@ import {
     getAllBlogs,
     updateBlog,
     deleteBlog,
-    getBlogById
+    getBlogById,
+    addComment
 } from "../controllers/blogController.js";
+import { Authorization } from "../middlewares/Authorization.js";
 import upload from "../helpers/multer.js";
 
 const router = express.Router();
-
-// create blog
-
 router.post("/blogs",upload.single("image"), createBlog);
-
-// get all blogs
-
+router.post("/comment/:blogId", addComment);
 router.get("/blogs", getAllBlogs);
-
-// get blog by id
-
 router.get("/blogs/:id", getBlogById);
-
-// update blog
-
 router.put("/blogs/:id",upload.single("image"), updateBlog);
-
-// delete blog
-
 router.delete("/blogs/:id", deleteBlog);
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Blog:
+ *        type: object
+ *        required:
+ *          - title
+ *          - description
+ *          - image
+ *        properties:
+ *           id:
+ *             type: string
+ *             description: The auto-generated id of the blog
+ *           title:
+ *              type: string
+ *              description: The title of your blog
+ *           description:
+ *              type: string
+ *              description: The blog explaination
+ *           image:
+ *              type: string
+ *              description: The url of your blog image
+ *           comments:
+ *              type: array
+ *              description: An array of blog comments
+ */
 
 /**
  * @swagger
  * /api/v1/blogs:
  *   get:
- *     summary: Get all blog posts
- *     description: Retrieve all blog posts from the database.
+ *     summary: List all of the blogs
+ *     tags: [Blogs]
  *     responses:
  *       200:
- *         description: A list of all blog posts.
+ *         description: The list of the blogs
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   description: The status of the request.
- *                 number:
- *                   type: number
- *                   description: The number of blog posts returned.
- *                 blogs:
- *                   type: array
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Blog'
+ *   post:
+ *     summary: Create a new blog
+ *     tags: [Blogs]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Blog'
+ *     responses:
+ *        200:
+ *          description: The created blog
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Blog'
+ *        500:
+ *          description: Internal server error 
+ *
+ * /api/v1/blogs/{id}:
+ *   get:
+ *     summary: Get a specific blog by ID
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the blog to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The specified blog
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Blog'
  *       404:
- *         description: Failed to retrieve blog posts.
+ *         description: Blog not found
+ *   put:
+ *     summary: Update a specific blog by ID
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the blog to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Blog'
+ *     responses:
+ *       200:
+ *         description: The updated blog
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   description: The status of the request.
- *                 error:
- *                   type: string
- *                   description: The error message.
+ *               $ref: '#/components/schemas/Blog'
+ *       404:
+ *         description: Blog not found
+ *   delete:
+ *     summary: Delete a specific blog by ID
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the blog to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: Blog deleted successfully
+ *       404:
+ *         description: Blog not found
  */
 
-/**
- * @swagger
- * /api/v1/blogs:
- *   post:
- *     summary: Creates a blog post
- *     description: Upload a blog post with title, description, and an optional image.
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - name: title
- *         in: formData
- *         type: string
- *         required: true
- *         description: The title of the blog post.
- *       - name: description
- *         in: formData
- *         type: string
- *         required: true
- *         description: The description of the blog post.
- *       - name: image
- *         in: formData
- *         type: file
- *         required: false
- *         description: The image to be uploaded (optional).
- *     responses:
- *       '201':
- *         description: Blog created
- *       '200':
- *         description: Success
- *       '403':
- *         description: Blog creation failed
- */
+
+
 
 
 export default router;
