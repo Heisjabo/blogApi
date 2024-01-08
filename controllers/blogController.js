@@ -2,7 +2,6 @@ import Blog from "../models/blogsModel.js";
 import { uploadFile } from "../helpers/upload.js";
 import { Comment } from "../models/blogsModel.js";
 
-
 // create blog
 
 export const createBlog = async (req, res) => {
@@ -53,8 +52,6 @@ export const updateBlog = async (req, res) => {
   try {
     console.log("Entering updateBlog");
     const id = req.params.id;
-    console.log("ID:", id);
-
     // Check if an image file is uploaded
     if (req.file) {
       const result = await uploadFile(req.file, res);

@@ -13,14 +13,12 @@ const router = express.Router();
 
 router.post('/users', createUser);
 router.post('/users/login', authUser);
-
 router.get("/users", getUsers);
 router.get("/users/verify", getUserVerifications);
 router.put("/verify/:id/:token", verifyUser);
 router.get("/users/:id", getUserById);
 router.put("/users/:id", updateUser);
 router.delete("/users/:id", deleteUser);
-
 
 /**
  * @swagger

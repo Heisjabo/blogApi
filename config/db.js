@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const offlineDb = 'mongodb://localhost:27017'
+const offlineDb = 'mongodb://localhost:27017/blogDb'
 
 const connectDB = async () => {
     try{
