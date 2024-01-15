@@ -11,12 +11,12 @@ import { Authorization } from "../middlewares/Authorization.js";
 import upload from "../helpers/multer.js";
 
 const router = express.Router();
-router.post("/blogs", Authorization, upload.single("image"), createBlog);
+router.post("/blogs", upload.single("image"), createBlog);
 router.post("/comment/:blogId", addComment);
 router.get("/blogs", getAllBlogs);
 router.get("/blogs/:id", getBlogById);
-router.put("/blogs/:id", Authorization, upload.single("image"), updateBlog);
-router.delete("/blogs/:id", Authorization, deleteBlog);
+router.put("/blogs/:id", upload.single("image"), updateBlog);
+router.delete("/blogs/:id", deleteBlog);
 
 
 /**
